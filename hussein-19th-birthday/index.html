@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0" />
+  <meta name="theme-color" content="#0C0A09" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  
+  <title>Hussein's 19th Birthday · A Digital Scrapbook of Us</title>
+  
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📼</text></svg>" />
+</head>
+<body>
+
+  <!-- ==============================================================
+       VAULT UNLOCK SCREEN (PIN 2711)
+       ============================================================== -->
+  <div class="vault-screen" id="vault-screen">
+    <div class="vault-container">
+      <div class="vault-badge">SEALED ARCHIVE · 2022–2026</div>
+      <h1 class="vault-title">Hussein's 19th</h1>
+      <p class="vault-subtitle">Enter your 4-digit passcode to unlock the scrapbook.</p>
+      
+      <div class="vault-headphone-note">
+        <span>🎧</span> Best experienced with headphones for ASMR sound
+      </div>
+
+      <!-- PIN Indicator -->
+      <div class="pin-dots">
+        <div class="pin-dot"></div>
+        <div class="pin-dot"></div>
+        <div class="pin-dot"></div>
+        <div class="pin-dot"></div>
+      </div>
+
+      <!-- Keypad -->
+      <div class="keypad">
+        <button class="key-btn" data-num="1">1</button>
+        <button class="key-btn" data-num="2">2<span class="letters">ABC</span></button>
+        <button class="key-btn" data-num="3">3<span class="letters">DEF</span></button>
+        <button class="key-btn" data-num="4">4<span class="letters">GHI</span></button>
+        <button class="key-btn" data-num="5">5<span class="letters">JKL</span></button>
+        <button class="key-btn" data-num="6">6<span class="letters">MNO</span></button>
+        <button class="key-btn" data-num="7">7<span class="letters">PQRS</span></button>
+        <button class="key-btn" data-num="8">8<span class="letters">TUV</span></button>
+        <button class="key-btn" data-num="9">9<span class="letters">WXYZ</span></button>
+        <div class="key-btn action-btn"></div>
+        <button class="key-btn" data-num="0">0</button>
+        <button class="key-btn action-btn" id="key-delete">⌫</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==============================================================
+       FLOATING HUD (Audio Controls)
+       ============================================================== -->
+  <header class="floating-hud">
+    <button class="audio-toggle-btn" id="audio-toggle-btn" aria-label="Toggle ASMR sound">
+      <div class="audio-pulse-dot"></div>
+      <span id="audio-label">SOUND OFF</span>
+    </button>
+  </header>
+
+  <!-- ==============================================================
+       MAIN SCRAPBOOK EXPERIENCE
+       ============================================================== -->
+  <main class="scrapbook-container">
+    
+    <!-- Hero Introduction -->
+    <header class="hero-header">
+      <div class="hero-date-badge">SEPTEMBER 1, 2022 — OCTOBER 6, 2026</div>
+      <h1 class="hero-title">A Digital Scrapbook <span>of Us</span></h1>
+      <p class="hero-subtitle">
+        Four years of chaotic laughter, midnight walks, Taylor Swift, Seoul, and taking bullets for each other.
+      </p>
+      
+      <div class="scroll-cue">
+        <span>Turn the pages</span>
+        <svg class="scroll-cue-arrow" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+    </header>
+
+    <!-- Dynamic Chapters Container -->
+    <div id="chapters-container"></div>
+
+  </main>
+
+  <script src="./memoriesData.js"></script>
+  <script src="./audio.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,1343 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&family=VT323&display=swap');
+
+:root {
+  --bg-primary: #0A0908;
+  --bg-secondary: #141210;
+  --bg-surface: #1C1917;
+  --paper-cream: #FDFBF7;
+  --paper-card: #F7F3EB;
+  --paper-manila: #EFE7DA;
+  --text-main: #F5F5F4;
+  --text-muted: #A8A29E;
+  --text-dark: #1C1917;
+  --orange-accent: #EA580C;
+  --orange-glow: rgba(234, 88, 12, 0.35);
+  --amber-warm: #F97316;
+  --tape-color: rgba(245, 230, 211, 0.88);
+  --tape-border: rgba(210, 190, 165, 0.5);
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-hand: 'Caveat', cursive;
+  --font-mono: 'Space Grotesk', monospace;
+  --font-retro: 'VT323', monospace;
+  --safe-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Subtle Film Grain Texture Overlay */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: 
+    radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(rgba(234, 88, 12, 0.02) 1px, transparent 1px);
+  background-size: 24px 24px, 100% 4px;
+  z-index: 999;
+  opacity: 0.7;
+}
+
+/* ==============================================================
+   VAULT UNLOCK SCREEN (PIN: 2711)
+   ============================================================== */
+.vault-screen {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 50% 35%, #1F1914 0%, #0A0908 100%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.vault-screen.unlocked {
+  opacity: 0;
+  transform: scale(1.06) translateY(-30px);
+  pointer-events: none;
+}
+
+.vault-container {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.vault-badge {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--amber-warm);
+  background: rgba(234, 88, 12, 0.12);
+  border: 1px solid rgba(234, 88, 12, 0.25);
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 20px;
+}
+
+.vault-title {
+  font-family: var(--font-serif);
+  font-size: 2.3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #FFF;
+  margin-bottom: 8px;
+}
+
+.vault-subtitle {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.vault-headphone-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #E2D9CE;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 6px 12px;
+  border-radius: 8px;
+  margin-bottom: 28px;
+}
+
+.pin-dots {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 34px;
+}
+
+.pin-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.pin-dot.filled {
+  background: var(--amber-warm);
+  border-color: var(--amber-warm);
+  box-shadow: 0 0 14px var(--orange-glow);
+  transform: scale(1.15);
+}
+
+.pin-dot.error {
+  background: #EF4444;
+  border-color: #EF4444;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+}
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  width: 100%;
+  max-width: 290px;
+}
+
+.key-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto;
+  color: #FFF;
+  font-size: 1.6rem;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.key-btn span.letters {
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-top: -2px;
+}
+
+.key-btn:active {
+  background: rgba(234, 88, 12, 0.3);
+  border-color: var(--amber-warm);
+  transform: scale(0.92);
+}
+
+.key-btn.action-btn {
+  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-muted);
+}
+
+/* ==============================================================
+   FLOATING HUD (Audio Controls)
+   ============================================================== */
+.floating-hud {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.audio-toggle-btn {
+  background: rgba(28, 25, 23, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #FFF;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  transition: all 0.2s ease;
+}
+
+.audio-toggle-btn.active {
+  border-color: var(--amber-warm);
+  color: var(--amber-warm);
+  box-shadow: 0 0 16px var(--orange-glow);
+}
+
+.audio-pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.audio-toggle-btn.active .audio-pulse-dot {
+  animation: pulse 1.6s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.3); }
+}
+
+/* ==============================================================
+   PAGE LAYOUT & CONTAINER
+   ============================================================== */
+.scrapbook-container {
+  width: 100%;
+  max-width: 580px;
+  margin: 0 auto;
+  padding: 40px 18px calc(80px + var(--safe-bottom));
+  position: relative;
+}
+
+/* ==============================================================
+   HERO HEADER
+   ============================================================== */
+.hero-header {
+  padding: 60px 0 40px;
+  text-align: center;
+  position: relative;
+}
+
+.hero-date-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--amber-warm);
+  background: rgba(234, 88, 12, 0.12);
+  border: 1px solid rgba(234, 88, 12, 0.25);
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 18px;
+}
+
+.hero-title {
+  font-family: var(--font-serif);
+  font-size: 3rem;
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #FFF;
+  margin-bottom: 14px;
+}
+
+.hero-title span {
+  font-style: italic;
+  font-weight: 400;
+  color: #FDBA74;
+}
+
+.hero-subtitle {
+  font-size: 1.02rem;
+  color: var(--text-muted);
+  max-width: 380px;
+  margin: 0 auto 30px;
+  line-height: 1.55;
+}
+
+.scroll-cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.scroll-cue-arrow {
+  width: 20px;
+  height: 20px;
+  stroke: var(--amber-warm);
+  animation: bounce 2s infinite ease-in-out;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* ==============================================================
+   CHAPTER / MEMORY SECTION
+   ============================================================== */
+.memory-chapter {
+  margin: 90px 0;
+  position: relative;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chapter-badge-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.chapter-number-pill {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  color: var(--amber-warm);
+  text-transform: uppercase;
+  background: rgba(234, 88, 12, 0.08);
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(234, 88, 12, 0.2);
+}
+
+.chapter-date-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.chapter-title {
+  font-family: var(--font-serif);
+  font-size: 2.1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #FFF;
+  line-height: 1.15;
+  margin-bottom: 6px;
+}
+
+.chapter-subtitle {
+  font-size: 0.88rem;
+  color: #FDBA74;
+  margin-bottom: 22px;
+  font-family: var(--font-mono);
+}
+
+.chapter-prose {
+  font-size: 1.02rem;
+  line-height: 1.75;
+  color: #D6D3D1;
+  margin-bottom: 28px;
+}
+
+.chapter-prose p {
+  margin-bottom: 12px;
+}
+
+.chapter-prose p:last-child {
+  margin-bottom: 0;
+}
+
+/* ==============================================================
+   WASHI TAPE & POLAROID FRAME
+   ============================================================== */
+.washi-tape {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1deg);
+  width: 110px;
+  height: 26px;
+  background: var(--tape-color);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  border-left: 2px dashed var(--tape-border);
+  border-right: 2px dashed var(--tape-border);
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.polaroid-card {
+  position: relative;
+  background: var(--paper-cream);
+  padding: 14px 14px 24px;
+  border-radius: 4px;
+  box-shadow: 0 18px 40px -10px rgba(0, 0, 0, 0.65), 0 0 1px 1px rgba(255, 255, 255, 0.08);
+  margin: 22px auto;
+  width: 100%;
+  max-width: 440px;
+  cursor: pointer;
+  transform-origin: center center;
+  transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.35s ease;
+  user-select: none;
+}
+
+.polaroid-card:hover {
+  box-shadow: 0 24px 50px -10px rgba(0, 0, 0, 0.8), 0 0 18px var(--orange-glow);
+}
+
+.polaroid-img-wrapper {
+  position: relative;
+  width: 100%;
+  border-radius: 2px;
+  overflow: hidden;
+  background: #1C1917;
+  aspect-ratio: 4 / 5;
+}
+
+.polaroid-img-wrapper.landscape {
+  aspect-ratio: 16 / 10;
+}
+
+.polaroid-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.polaroid-caption {
+  margin-top: 14px;
+  font-family: var(--font-hand);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  text-align: center;
+  line-height: 1.25;
+  transform: rotate(-0.5deg);
+}
+
+.tap-hint {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #78716C;
+  text-align: center;
+  margin-top: 6px;
+}
+
+/* ==============================================================
+   SONG ARTIFACT CARD (SPOTIFY DEEP LINK)
+   ============================================================== */
+.song-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(28, 25, 23, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 3px solid var(--amber-warm);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin: 18px 0;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.25s ease;
+}
+
+.song-card:hover {
+  background: rgba(41, 37, 36, 0.9);
+  transform: translateY(-2px);
+  border-color: rgba(234, 88, 12, 0.4);
+  box-shadow: 0 10px 24px -5px rgba(0, 0, 0, 0.5);
+}
+
+.song-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.song-disc-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #292524 35%, #1C1917 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--amber-warm);
+  font-size: 1.1rem;
+}
+
+.song-text h5 {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #FFF;
+}
+
+.song-text p {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.spotify-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: #1DB954;
+  background: rgba(29, 185, 84, 0.1);
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(29, 185, 84, 0.2);
+}
+
+/* ==============================================================
+   CREATIVE GADGET 1: CHAPTER 01 FIRST MEETING
+   ============================================================== */
+.first-meeting-gadget {
+  background: rgba(28, 25, 23, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 20px;
+  margin: 24px 0;
+  position: relative;
+}
+
+.ig-dm-bubble {
+  background: #262626;
+  border-radius: 18px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.ig-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #F58529, #DD2A7B, #8134AF);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #FFF;
+  font-weight: 700;
+}
+
+.ig-content .user {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #FFF;
+}
+
+.ig-content .msg {
+  font-size: 0.85rem;
+  color: #E5E5E5;
+}
+
+.hp-parchment-quote {
+  background: #F4EAD4;
+  color: #2D241E;
+  padding: 18px;
+  border-radius: 8px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.hp-parchment-quote .tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: #78350F;
+  text-transform: uppercase;
+  font-style: normal;
+  display: block;
+  margin-top: 8px;
+}
+
+/* ==============================================================
+   CREATIVE GADGET 2: CHAPTER 02 KFC RECEIPT
+   ============================================================== */
+.kfc-receipt {
+  background: #FFFBF0;
+  color: #1C1917;
+  padding: 24px 20px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  border-radius: 4px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  margin: 20px 0;
+  border-top: 4px dashed #D6D3D1;
+  border-bottom: 4px dashed #D6D3D1;
+}
+
+.kfc-receipt .header {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+.kfc-item-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 6px 0;
+}
+
+.kfc-receipt .total-row {
+  border-top: 1px dashed #A8A29E;
+  padding-top: 8px;
+  margin-top: 10px;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ==============================================================
+   CREATIVE GADGET 3: CHAPTER 03 Y2K WALKMAN CASSETTE
+   ============================================================== */
+.walkman-gadget {
+  background: linear-gradient(135deg, #1C1917 0%, #2E1B10 100%);
+  border: 1px solid rgba(234, 88, 12, 0.3);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 24px 0;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+  position: relative;
+}
+
+.walkman-window {
+  background: #0C0A09;
+  border: 2px solid #44403C;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-bottom: 18px;
+}
+
+.cassette-reel {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FFF 20%, #78716C 25%, #1C1917 60%);
+  border: 3px dashed var(--amber-warm);
+  animation: spinReel 4s linear infinite;
+}
+
+@keyframes spinReel {
+  100% { transform: rotate(360deg); }
+}
+
+.cassette-label-box {
+  text-align: center;
+}
+
+.cassette-label-box .track {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #FFF;
+}
+
+.cassette-label-box .artist {
+  font-size: 0.78rem;
+  color: var(--amber-warm);
+}
+
+/* ==============================================================
+   CREATIVE GADGET 4: CHAPTER 05 STEP COUNTER ODOMETER
+   ============================================================== */
+.step-odometer-box {
+  background: #1C1917;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.odometer-item .val {
+  font-family: var(--font-mono);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--amber-warm);
+  line-height: 1;
+}
+
+.odometer-item .lbl {
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+/* ==============================================================
+   CREATIVE GADGET 5: CHAPTER 06 THE FIRST HUG (QUIET SILENCE)
+   ============================================================== */
+.memory-chapter[data-theme="quiet"] {
+  padding: 70px 0;
+  text-align: center;
+}
+
+.quiet-hug-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 36px 24px;
+  margin: 24px auto;
+  max-width: 420px;
+}
+
+.quiet-hug-heart {
+  font-size: 2.2rem;
+  color: #F5EBE1;
+  margin-bottom: 16px;
+  display: inline-block;
+  animation: softBreath 3s infinite ease-in-out;
+}
+
+@keyframes softBreath {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+.quiet-hug-quote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.25rem;
+  color: #E7E5E4;
+  line-height: 1.6;
+}
+
+/* ==============================================================
+   CREATIVE GADGET 6: CHAPTER 08 SCHOOL COUNTDOWN
+   ============================================================== */
+.school-timer-box {
+  background: #1C1917;
+  border: 2px dashed rgba(234, 88, 12, 0.4);
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.school-timer-digits {
+  font-family: var(--font-retro);
+  font-size: 3.2rem;
+  color: var(--amber-warm);
+  letter-spacing: 0.1em;
+  line-height: 1;
+  margin: 8px 0;
+}
+
+.school-timer-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ==============================================================
+   CREATIVE GADGET 7: CHAPTER 10 THE FALLING APART (COLD RAIN)
+   ============================================================== */
+.memory-chapter[data-theme="fallout"] {
+  background: radial-gradient(circle at 50% 50%, rgba(30, 41, 59, 0.3) 0%, transparent 80%);
+  padding: 50px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.memory-chapter[data-theme="fallout"] .chapter-number-pill {
+  color: #94A3B8;
+  border-color: rgba(148, 163, 184, 0.3);
+}
+
+.memory-chapter[data-theme="fallout"] .chapter-title {
+  color: #E2E8F0;
+  font-style: italic;
+}
+
+.memory-chapter[data-theme="fallout"] .chapter-subtitle {
+  color: #64748B;
+}
+
+/* ==============================================================
+   CREATIVE GADGET 8: CHAPTER 11 & 12 APARTMENT & SALMAN
+   ============================================================== */
+.apartment-buzzer-card {
+  background: #1C1917;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+.buzzer-btn {
+  background: var(--amber-warm);
+  color: #1C1917;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.buzzer-btn:active {
+  transform: scale(0.92);
+}
+
+.weekend-calendar-stamp {
+  background: rgba(28, 25, 23, 0.8);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin: 20px 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.stamp-day {
+  text-align: center;
+}
+
+.stamp-day .check {
+  font-size: 1.1rem;
+  color: var(--amber-warm);
+}
+
+/* ==============================================================
+   CREATIVE GADGET 9: CHAPTER 13 BOLD QUOTE POSTER
+   ============================================================== */
+.bold-quote-poster {
+  background: linear-gradient(135deg, rgba(234, 88, 12, 0.15) 0%, rgba(28, 25, 23, 0.9) 100%);
+  border: 2px solid var(--orange-accent);
+  border-radius: 14px;
+  padding: 28px 24px;
+  margin: 24px 0;
+  box-shadow: 0 16px 40px var(--orange-glow);
+  text-align: center;
+}
+
+.bold-quote-poster .text {
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  font-style: italic;
+  font-weight: 700;
+  color: #FFF;
+  line-height: 1.4;
+}
+
+/* ==============================================================
+   CREATIVE GADGET 10: CHAPTER 14 IPHONE LOCKSCREEN FRAME
+   ============================================================== */
+.iphone-frame {
+  background: #000;
+  border: 4px solid #333;
+  border-radius: 28px;
+  padding: 8px;
+  max-width: 380px;
+  margin: 24px auto;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+}
+
+.iphone-screen {
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+.iphone-img {
+  width: 100%;
+  display: block;
+}
+
+.lockscreen-highlight-banner {
+  background: rgba(147, 51, 234, 0.2);
+  border: 1px solid rgba(147, 51, 234, 0.4);
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-top: 14px;
+  font-size: 0.82rem;
+  color: #D8B4FE;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* ==============================================================
+   CREATIVE GADGET 11: CHAPTER 15 GOLDEN MILESTONE
+   ============================================================== */
+.golden-milestone-badge {
+  background: radial-gradient(circle, rgba(234, 88, 12, 0.2) 0%, rgba(28, 25, 23, 0.8) 100%);
+  border: 2px solid #F59E0B;
+  border-radius: 16px;
+  padding: 28px 20px;
+  text-align: center;
+  margin: 24px 0;
+  box-shadow: 0 0 30px rgba(245, 158, 11, 0.2);
+}
+
+.golden-milestone-badge .icon {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+}
+
+.golden-milestone-badge .title {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #FBBF24;
+}
+
+.golden-milestone-badge .sub {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: #E5E7EB;
+  margin-top: 6px;
+}
+
+/* ==============================================================
+   CREATIVE GADGET 12: CHAPTER 16 RETRO CRT TV (RIYADH)
+   ============================================================== */
+.crt-tv-container {
+  background: #1F1B18;
+  border: 6px solid #332B25;
+  border-radius: 24px;
+  padding: 18px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 0, 0, 0.5);
+  margin: 24px 0;
+}
+
+.crt-screen {
+  background: radial-gradient(circle, #242220 0%, #0D0C0B 100%);
+  border-radius: 16px;
+  padding: 28px 18px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #3E352F;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* CRT Scanlines */
+.crt-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px, rgba(0,0,0,0.3) 3px);
+  pointer-events: none;
+}
+
+.crt-channel-badge {
+  font-family: var(--font-retro);
+  font-size: 1.6rem;
+  color: #10B981;
+  text-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+  margin-bottom: 6px;
+}
+
+.crt-show-title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #FFF;
+}
+
+.crt-show-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.crt-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.crt-btn {
+  background: #38302A;
+  border: 1px solid #574B41;
+  color: #E7E5E4;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.crt-btn.active {
+  background: var(--amber-warm);
+  color: #1C1917;
+  font-weight: 700;
+}
+
+/* ==============================================================
+   CHAPTER 17: SEOUL KOREA PHOTO MOSAIC
+   ============================================================== */
+.korea-passport-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 2px dashed rgba(234, 88, 12, 0.4);
+  color: var(--amber-warm);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 6px 14px;
+  border-radius: 6px;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.korea-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  margin-top: 30px;
+}
+
+@media (min-width: 520px) {
+  .korea-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+/* ==============================================================
+   FINALE: THE GRAND COLLAGE & SPIDEY'S BIRTHDAY LETTER
+   ============================================================== */
+.finale-section {
+  margin-top: 120px;
+  padding: 60px 0 40px;
+  position: relative;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.finale-badge {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.grand-letter-card {
+  background: var(--paper-cream);
+  color: var(--text-dark);
+  padding: 40px 28px;
+  border-radius: 8px;
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8), 0 0 24px var(--orange-glow);
+  position: relative;
+  margin-bottom: 40px;
+}
+
+.grand-letter-tape {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%) rotate(1deg);
+  width: 140px;
+  height: 28px;
+  background: var(--tape-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  border-left: 2px dashed var(--tape-border);
+  border-right: 2px dashed var(--tape-border);
+}
+
+.grand-letter-title {
+  font-family: var(--font-serif);
+  font-size: 2.4rem;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+  color: var(--text-dark);
+}
+
+.grand-letter-body {
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #292524;
+  margin-bottom: 32px;
+}
+
+.grand-letter-body p {
+  margin-bottom: 14px;
+}
+
+.grand-letter-lyric {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--orange-accent);
+  text-align: center;
+  padding: 16px 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  margin-bottom: 28px;
+}
+
+.grand-letter-signature {
+  text-align: right;
+  font-family: var(--font-hand);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.2;
+}
+
+.grand-letter-signature span {
+  display: block;
+  font-size: 2.2rem;
+  color: var(--orange-accent);
+}
+
+.celebrate-btn-container {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.celebrate-btn {
+  background: linear-gradient(135deg, var(--orange-accent) 0%, #F59E0B 100%);
+  color: #FFF;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  padding: 14px 28px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 10px 24px var(--orange-glow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.celebrate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px var(--orange-glow);
+}
+
+.finale-birthday-banner {
+  text-align: center;
+  padding: 30px 10px;
+}
+
+.finale-birthday-text {
+  font-family: var(--font-serif);
+  font-size: 2.7rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: #FFF;
+  letter-spacing: -0.02em;
+}
+
+.finale-birthday-text span {
+  display: block;
+  font-style: italic;
+  font-size: 1.9rem;
+  color: #FDBA74;
+}
+
+.finale-time-stamp {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+  margin-top: 16px;
+  text-transform: uppercase;
+}
+
+/* ==============================================================
+   LIGHTBOX MODAL
+   ============================================================== */
+.lightbox-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.lightbox-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lightbox-content {
+  background: var(--paper-cream);
+  padding: 16px 16px 28px;
+  border-radius: 6px;
+  max-width: 90vw;
+  max-height: 85vh;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
+  text-align: center;
+  position: relative;
+}
+
+.lightbox-img {
+  max-width: 100%;
+  max-height: 70vh;
+  border-radius: 3px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+.lightbox-caption {
+  font-family: var(--font-hand);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-top: 16px;
+}
+
+.lightbox-close-btn {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: transparent;
+  border: none;
+  color: #FFF;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+/* ==============================================================
+   CONFETTI CANNON
+   ============================================================== */
+.confetti-particle {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+  z-index: 3000;
+  animation: fallDown 3s linear forwards;
+}
+
+@keyframes fallDown {
+  0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+}
+
+/* Responsive Desktop */
+@media (min-width: 768px) {
+  body {
+    background: radial-gradient(circle at 50% 15%, #181410 0%, #0A0908 100%);
+  }
+  
+  .scrapbook-container {
+    max-width: 680px;
+  }
+
+  .hero-title {
+    font-size: 3.8rem;
+  }
+
+  .chapter-title {
+    font-size: 2.5rem;
+  }
+}
